@@ -1,4 +1,4 @@
-# CloudyCRM API Connector para PHP
+# CloudyCRM API Wrapper para PHP
 <h2>Instalación</h2>
 Para poder utilizar el conector, primero debemos instalar el archivo crm_api.php y agregarlo a la carpeta que deseemos.<br>
 Luego, lo incluimos con 
