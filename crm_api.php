@@ -92,6 +92,13 @@ class CloudyCRM{
         $response = curl_exec($curl);
         
         curl_close($curl);
+        $response = str_replace("á","&aacute;",$response);
+        $response = str_replace("é","&eacute;",$response);
+        $response = str_replace("í","&iacute;",$response);
+        $response = str_replace("ó","&oacute;",$response);
+        $response = str_replace("ú","&uacute;",$response);
+        $response = str_replace("ñ","&ntilde;",$response);
+        $response = str_replace("Ñ","&Ntilde;",$response);
         $response = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $response), true );
         return $response;
     }
@@ -126,6 +133,13 @@ class CloudyCRM{
 
         $documentoJson = json_encode($documento["InternalObject"]);
         $documentoJson = str_replace("[]","{}",$documentoJson);
+        $documentoJson = str_replace("&aacute;","á",$documentoJson);
+        $documentoJson = str_replace("&eacute;","é",$documentoJson);
+        $documentoJson = str_replace("&iacute;","í",$documentoJson);
+        $documentoJson = str_replace("&oacute;","ó",$documentoJson);
+        $documentoJson = str_replace("&uacute;","ú",$documentoJson);
+        $documentoJson = str_replace("&ntilde;","ñ",$documentoJson);
+        $documentoJson = str_replace("&Ntilde;","Ñ",$documentoJson);
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
