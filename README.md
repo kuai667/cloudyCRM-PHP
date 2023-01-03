@@ -28,5 +28,4 @@ Esta función nos devuelve todos los datos de un documento, lo buscaremos utiliz
 <h3>Modificar un documento</h3>
 Con esta función podremos modificar cualquier campo editable de un documento. Utilizaremos el doc_id para identificar el documento, la variable $field para el campo que deseamos modificar y $value para el valor que deseamos darle al campo. Devolverá la información completa del documento ya modificado.
 <br>
-<code>
-$cloudyCRM->modificarDocumento($docId,$field,$value);</code>
+<code>$cloudyCRM->modificarDocumento($docId,$field,$value);</code>
