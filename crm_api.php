@@ -78,7 +78,7 @@ class CloudyCRM{
         $curl = curl_init();
         $formula = urlencode($query);
         curl_setopt_array($curl, array(
-          CURLOPT_URL => "https://$this->subDominio.cloudycrm.net/restful/folders/$folder/documents?fields=doc_id&formula=$formula&order=doc_id&maxDocs=1&recursive=false&maxDescrLength=1000",
+          CURLOPT_URL => "https://$this->subDominio.cloudycrm.net/restful/folders/$folder/documents?fields=doc_id&formula=$formula&order=doc_id&maxDocs=0&recursive=false&maxDescrLength=1000",
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
@@ -99,7 +99,7 @@ class CloudyCRM{
         foreach($response['InternalObject'] as $object){
             $return[]= $object['DOC_ID'];
         }
-        return $return;
+        return $response;
     }
 
     /**
