@@ -69,6 +69,39 @@ class CloudyCRM{
         return $response["InternalObject"][0]["DOC_ID"];
     }
 
+        /**
+     * Busca el DocId de varios documentos según la query.
+     * 
+     */
+    public function searchAllDocIds($query,$folder)
+    {
+        $curl = curl_init();
+        $formula = urlencode($query);
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://$this->subDominio.cloudycrm.net/restful/folders/$folder/documents?fields=doc_id&formula=$formula&order=doc_id&maxDocs=1&recursive=false&maxDescrLength=1000",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'GET',
+          CURLOPT_HTTPHEADER => array(
+              "apikey: $this->apiKey"
+        ),
+        ));
+        
+        $response = curl_exec($curl);
+        
+        curl_close($curl);
+        $response = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $response), true );
+        $return = array();
+        foreach($response['InternalObject'] as $object){
+            $return[]= $object['DOC_ID'];
+        }
+        return $return;
+    }
+
     /**
      * Devuelve toda la información de un documento según su DocId
      */
