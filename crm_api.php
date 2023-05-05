@@ -99,7 +99,7 @@ class CloudyCRM{
         foreach($response['InternalObject'] as $object){
             $return[]= $object['DOC_ID'];
         }
-        return $response;
+        return $return;
     }
 
     /**
