@@ -200,4 +200,78 @@ class CloudyCRM{
         $response = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $response), true );
         return $response;
     }
+
+
+
+    /**
+     * Modifica múltiples atributos de un mismo documento
+     * $values debe ser un array asociativo:
+     * $value = array(
+     *                  "field" => "value",
+     *                  "field" => "value"
+     *                 );
+     */
+    public function modificarVariosAtributosDocumento($docId,$values)
+    {
+        $documento = $this->getDocumento($docId);
+        $count = 0;
+        $i = 0;
+
+        foreach($values as $field => $value){
+            foreach($documento["InternalObject"]["CustomFields"] as $dato){
+            if($dato["Name"] == strtoupper($field)){
+                if($dato["Updatable"] == true){
+                $count = 1;
+                $documento["InternalObject"]["CustomFields"][$i]["Value"] = $value;
+                $value = $dato["Value"];
+                }else{
+                    return "El campo '$field' no puede ser editado.";
+                }
+            }
+            $i++;
+            //print_r($dato["Name"]);
+        }
+        if($count == 0){
+            return "El campo '$field' no existe en el documento. Por favor, verifique los datos ingresados";
+        }
+        }
+
+        $documentoJson = json_encode($documento["InternalObject"]);
+        $documentoJson = str_replace("[]","{}",$documentoJson);
+        $documentoJson = str_replace("&aacute;","á",$documentoJson);
+        $documentoJson = str_replace("&eacute;","é",$documentoJson);
+        $documentoJson = str_replace("&iacute;","í",$documentoJson);
+        $documentoJson = str_replace("&oacute;","ó",$documentoJson);
+        $documentoJson = str_replace("&uacute;","ú",$documentoJson);
+        $documentoJson = str_replace("&ntilde;","ñ",$documentoJson);
+        $documentoJson = str_replace("&Ntilde;","Ñ",$documentoJson);
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://identidadarg.cloudycrm.net/restful/documents/$docId",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => '{
+            "document": 
+            '.$documentoJson.'
+        
+        }',
+        CURLOPT_HTTPHEADER => array(
+            "apikey: $this->apiKey"
+          ),
+        ));
+        
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $response = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $response), true );
+        return $response;
+    }
 }
+
+
